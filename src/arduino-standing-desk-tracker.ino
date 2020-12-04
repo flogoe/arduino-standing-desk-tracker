@@ -7,8 +7,8 @@ const int yellowLED = 3;
 const int greenLED = 2;
 
 // Variables
-const int standingMIN = 90;           // in cm
-const int standingMAX = 110;          // in cm
+const int minStandingHeight = 90;     // in cm
+const int maxStandingHeight = 110;    // in cm
 const int maxSittingTime = 2700;      // in seconds
 const int standingWarningTime = 3600; // in seconds
 
@@ -17,7 +17,6 @@ long duration = 0;
 long distance = 0;
 
 // Sitting
-
 long sittingTimer = 0;
 long standingTimer = 0;
 
@@ -39,7 +38,7 @@ void loop() {
     trackStandingTime();
     resetSittingTimer();
   } else {
-    checkSittingTime();
+    trackSittingTime();
     resetStandingTimer();
   }
 
@@ -55,21 +54,19 @@ void measureDistance() {
   duration = pulseIn(echo, HIGH);
   distance = (duration / 2) * 0.03432;
 
-  if (distance >= standingMIN && distance <= standingMAX) {
+  if (distance >= minStandingHeight && distance <= maxStandingHeight) {
     isStanding = true;
   } else {
     isStanding = false;
   }
 }
 
-bool checkSittingTime() {
+void trackSittingTime() {
   if (sittingTimer < maxSittingTime) {
     yellowOn();
     sittingTimer += 1;
-    return true;
   } else {
     alarmOn();
-    return false;
   }
 }
 
